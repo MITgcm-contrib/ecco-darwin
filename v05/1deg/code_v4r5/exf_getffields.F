@@ -780,7 +780,26 @@ cdm #endif
        ENDDO
        ENDDO
 
+#ifdef ALLOW_ROTATE_UV_CONTROLS
+       CALL ROTATE_UV2EN_RL(tmpUX,tmpVY,tmpUE,tmpVN,
+     &      .FALSE.,.FALSE.,.TRUE.,1,myThid)
+
        DO bj = myByLo(myThid),myByHi(myThid)
+         DO bi = myBxLo(myThid),myBxHi(myThid)
+          DO j = 1,sNy
+           DO i = 1,sNx
+             uwind(i,j,bi,bj)=uwind(i,j,bi,bj)+tmpUX(i,j,bi,bj)
+             vwind(i,j,bi,bj)=vwind(i,j,bi,bj)+tmpVY(i,j,bi,bj)
+           ENDDO
+          ENDDO
+         ENDDO
+       ENDDO
+#endif /* ALLOW_ROTATE_UV_CONTROLS */
+
+      ENDIF !if (ctrlUseGen) then
+#endif
+
+      DO bj = myByLo(myThid),myByHi(myThid)
        DO bi = myBxLo(myThid),myBxHi(myThid)
         DO j = 1,sNy
          DO i = 1,sNx
@@ -810,26 +829,7 @@ cdm #endif
          ENDDO
         ENDDO
        ENDDO
-       ENDDO
-
-#ifdef ALLOW_ROTATE_UV_CONTROLS
-       CALL ROTATE_UV2EN_RL(tmpUX,tmpVY,tmpUE,tmpVN,
-     &      .FALSE.,.FALSE.,.TRUE.,1,myThid)
-
-       DO bj = myByLo(myThid),myByHi(myThid)
-         DO bi = myBxLo(myThid),myBxHi(myThid)
-          DO j = 1,sNy
-           DO i = 1,sNx
-             uwind(i,j,bi,bj)=uwind(i,j,bi,bj)+tmpUX(i,j,bi,bj)
-             vwind(i,j,bi,bj)=vwind(i,j,bi,bj)+tmpVY(i,j,bi,bj)
-           ENDDO
-          ENDDO
-         ENDDO
-       ENDDO
-#endif /* ALLOW_ROTATE_UV_CONTROLS */
-
-      ENDIF !if (ctrlUseGen) then
-#endif
+      ENDDO
 
       RETURN
       END
